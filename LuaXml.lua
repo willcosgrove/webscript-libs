@@ -1,4 +1,4 @@
-require("LuaXml/LuaXML_lib")
+require("LuaXml.LuaXML_lib")
 
 local base = _G
 local xml = xml
