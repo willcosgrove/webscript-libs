@@ -18,6 +18,7 @@ function TelegramBot:run(request)
 end
 
 function TelegramBot:registerWebhook(webhook_url)
+  webhook_url = webhook_url or ("https://" .. request.headers["Host"] .. request.path)
   http.request({
     url = "https://api.telegram.org/bot"..self.apiKey.."/setWebhook",
     method = "POST",
