@@ -1,4 +1,4 @@
-TelegramBot = {}
+local TelegramBot = {}
 
 function TelegramBot:new(key)
   o = {apiKey = key}
@@ -27,3 +27,5 @@ function TelegramBot:registerWebhook(webhook_url)
   })
   return true
 end
+
+return TelegramBot
