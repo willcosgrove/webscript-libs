@@ -1,7 +1,7 @@
 TelegramBot = {}
 
-function TelegramBot:new(o)
-  o = o or {}
+function TelegramBot:new(key)
+  o = {apiKey = key}
   setmetatable(o, self)
   self.__index = self
   return o
@@ -15,4 +15,15 @@ function TelegramBot:run(request)
   else
     return 200
   end
+end
+
+function TelegramBot:registerWebhook(webhook_url)
+  http.request({
+    url = "https://api.telegram.org/bot"..self.apiKey.."/setWebhook",
+    method = "POST",
+    data = {
+      url = webhook_url,
+    },
+  })
+  return true
 end
