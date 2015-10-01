@@ -9,7 +9,7 @@ end
 
 function TelegramBot:run(request)
   payload = json.parse(request.body)
-  if string.match(payload.message.text, "^/%a+") then
+  if payload.message.text and string.match(payload.message.text, "^/%a+") then
     _, _, command, args = string.find(payload.message.text, "/(%a+)@?%a+%s?(.*)")
     if self[command] then
       return self[command](args, payload)
