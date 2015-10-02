@@ -9,15 +9,19 @@ end
 
 function TelegramBot:run(request)
   payload = json.parse(request.body)
+  state = json.parse(storage[payload.message.chat.id] or "{}")
   if payload.message.text and string.match(payload.message.text, "^/%a+") then
     _, _, command, args = string.find(payload.message.text, "/(%a+)[@]?%a*%s?(.*)")
     if self[command] then
-      return self[command](self, args, payload)
+      reply, newState = self[command](self, args, payload, state)
     elseif self.catchall then
-      return self.catchall(self, args, payload)
+      reply, newState = self.catchall(self, args, payload, state)
     else
       return 404
     end
+    newState = newState or state
+    storage[payload.message.chat.id] = json.stringify(newState)
+    return reply
   else
     return 200
   end
