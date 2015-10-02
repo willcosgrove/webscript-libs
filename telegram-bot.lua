@@ -35,4 +35,14 @@ function TelegramBot:registerWebhook(webhook_url)
   return true
 end
 
+function TelegramBot:sendMessage(message)
+  local response = http.request({
+    url = "https://api.telegram.org/bot"..self.apiKey.."/sendMessage",
+    method = "POST",
+    data = message,
+  })
+
+  return json.parse(response.content)
+end
+
 return TelegramBot
