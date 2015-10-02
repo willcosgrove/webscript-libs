@@ -14,8 +14,6 @@ function TelegramBot:run(request)
     _, _, command, args = string.find(payload.message.text, "/(%a+)[@]?%a*%s?(.*)")
     if self[command] then
       reply, newState = self[command](self, args, payload, state)
-    elseif self.catchall then
-      reply, newState = self.catchall(self, args, payload, state)
     else
       return 404
     end
@@ -23,7 +21,14 @@ function TelegramBot:run(request)
     storage[payload.message.chat.id] = json.stringify(newState)
     return reply
   else
-    return 200
+    if self.catchall then
+      reply, newState = self.catchall(self, args, payload, state)
+      newState = newState or state
+      storage[payload.message.chat.id] = json.stringify(newState)
+      return reply
+    else
+      return 404
+    end
   end
 end
 
