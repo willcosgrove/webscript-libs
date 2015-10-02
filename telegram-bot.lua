@@ -13,6 +13,8 @@ function TelegramBot:run(request)
     _, _, command, args = string.find(payload.message.text, "/(%a+)[@]?%a*%s?(.*)")
     if self[command] then
       return self[command](args, payload)
+    elseif self.catchall then
+      return self.catchall(args, payload)
     else
       return 404
     end
