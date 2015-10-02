@@ -53,7 +53,8 @@ function TelegramBot:sendMessage(message)
   local response = http.request({
     url = "https://api.telegram.org/bot"..self.apiKey.."/sendMessage",
     method = "POST",
-    data = message,
+    data = json.stringify(message),
+    headers = {["Content-Type"] = "application/json"},
   })
 
   return json.parse(response.content)
