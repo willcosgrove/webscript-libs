@@ -10,7 +10,12 @@ end
 function TelegramBot:run(request)
   payload = json.parse(request.body)
   state = json.parse(storage[payload.message.chat.id] or "{}")
-  if payload.message.text and string.match(payload.message.text, "^/%a+") then
+  if payload.message.group_chat_created and self.onGroupChatCreated then
+    reply, newState = self.onGroupChatCreated(self, payload, state)
+    newState = newState or state
+    storage[payload.message.chat.id] = json.stringify(newState)
+    return reply
+  elseif payload.message.text and string.match(payload.message.text, "^/%a+") then
     _, _, command, args = string.find(payload.message.text, "/(%a+)[@]?%a*%s?(.*)")
     if self[command] then
       reply, newState = self[command](self, args, payload, state)
