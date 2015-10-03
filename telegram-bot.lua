@@ -60,4 +60,17 @@ function TelegramBot:sendMessage(message)
   return json.parse(response.content)
 end
 
+function TelegramBot:replyTo(message, response, doNotSend)
+  local reply = {chat_id = message.chat.id, reply_to_message_id = message.message_id}
+  for k,v in pairs(response) do
+    reply[k] = v
+  end
+  if doNotSend then
+    reply.method = "sendMessage"
+    return reply
+  else
+    return self:sendMessage(reply)
+  end
+end
+
 return TelegramBot
